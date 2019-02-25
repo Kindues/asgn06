@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--	Author: Michael Craven
-		Date:	2/20/2019
-		File:	job-titles2.php
+		Date:	2/25/2019
+		File:	wage-report.php
 		Purpose:MySQL Exercise
 -->
 
@@ -10,18 +10,13 @@
 	<title>MySQL Query</title>
 	<link rel ="stylesheet" type="text/css" href="sample.css">
 </head>
-
 <body>
-
 <?php
 
 $server = "localhost";
 $user = "wbip";
 $pw = "wbip123";
 $db = "test";
-
-include('db-connect.php');
-
 
 $connect=mysqli_connect($server, $user, $pw, $db);
 
@@ -32,9 +27,10 @@ if( !$connect)
 	", ".mysqli_connect_error().")");
 }
 
+$hourlyWage = $_POST['hourlyWage'];
 $jobTitle = $_POST['jobTitle'];
 
-$userQuery = " Select lastName, firstName From personnel where jobTitle = '$jobTitle'";  // ADD THE QUERY
+$userQuery = "select empID from personnel where jobTitle = '$jobTitle' and hourlyWage >='$hourlyWage' "; // ADD THE QUERY
 
 $result = mysqli_query($connect, $userQuery);
 
@@ -50,18 +46,20 @@ if (mysqli_num_rows($result) == 0)
 }
 else 
 { 
-  
 	print("<h1>RESULTS</h1>");
+	print("<p>The following employees have the $jobTitle job title, and an hourly wage of $".
+			number_format($hourlyWage, 2)." or higher:</p>");
+			
 	print("<table border = \"1\">");
-	print("<tr><th>FIRST NAME</th><th>LAST NAME</th></tr>");
-  while ($person = mysqli_fetch_assoc($result))
-  {
-  print("<tr><th>".$person['firstName']."</th><th>".$person['lastName']."</th></tr>");
-	
-	print ("</table>");
-  }  
-}
+	print("<tr><th>EMP ID</th></tr>");
 
+	while ($row = mysqli_fetch_assoc($result))
+	{
+		print ("<tr><td>".$row['empID']."</td></tr>");
+	}
+
+	print ("</table>");
+}
 
 mysqli_close($connect);   // close the connection
  

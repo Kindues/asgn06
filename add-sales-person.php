@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!--	Author: Michael Craven
-		Date:	2/20/2019
-		File:	job-titles2.php
+<!--	Author: 
+		Date:	
+		File:	add-sale-person.php
 		Purpose:MySQL Exercise
 -->
 
@@ -20,9 +20,6 @@ $user = "wbip";
 $pw = "wbip123";
 $db = "test";
 
-include('db-connect.php');
-
-
 $connect=mysqli_connect($server, $user, $pw, $db);
 
 if( !$connect) 
@@ -31,10 +28,11 @@ if( !$connect)
 	using user name $user (".mysqli_connect_errno().
 	", ".mysqli_connect_error().")");
 }
+$empID = $_POST['empID'];
+$firstName = $_POST['firstName'];
+$lastName = $_POST['lastName'];
 
-$jobTitle = $_POST['jobTitle'];
-
-$userQuery = " Select lastName, firstName From personnel where jobTitle = '$jobTitle'";  // ADD THE QUERY
+$userQuery = "INSERT into personnel (empID, firstName, lastName, jobTitle, hourlyWage) Values ($empID, '$firstName', '$lastName', 'Sales', 8.25)"; // ADD THE QUERY
 
 $result = mysqli_query($connect, $userQuery);
 
@@ -43,25 +41,18 @@ if (!$result)
 	die("Could not successfully run query ($userQuery) from $db: " .	
 		mysqli_error($connect) );
 }
-
-if (mysqli_num_rows($result) == 0) 
+else
 {
-	print("No records found with query $userQuery");
+	print("	<h1>ADD A NEW PERSONNEL RECORD</h1>");
+	print ("<p>The following record was added to the personnel table:</p>");
+	print("<table border='0'>
+			<tr><td>EMPLOYEE ID</td><td>$empID</td></tr>
+			<tr><td>FIRST NAME</td><td>$firstName</td></tr>
+			<tr><td>LAST NAME</td><td>$lastName</td></tr>		
+			<tr><td>JOB TITLE</td><td>sales</td></tr>
+			<tr><td>HOURLY WAGE</td><td>8.25</td></tr>
+			</table>");
 }
-else 
-{ 
-  
-	print("<h1>RESULTS</h1>");
-	print("<table border = \"1\">");
-	print("<tr><th>FIRST NAME</th><th>LAST NAME</th></tr>");
-  while ($person = mysqli_fetch_assoc($result))
-  {
-  print("<tr><th>".$person['firstName']."</th><th>".$person['lastName']."</th></tr>");
-	
-	print ("</table>");
-  }  
-}
-
 
 mysqli_close($connect);   // close the connection
  

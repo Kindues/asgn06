@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!--	Author: Michael Craven
-		Date:	2/20/2019
-		File:	job-titles2.php
+<!--	Author: Michael Craven 
+		Date:	2/24/2019
+		File:	raises.php
 		Purpose:MySQL Exercise
 -->
 
@@ -12,16 +12,12 @@
 </head>
 
 <body>
-
 <?php
 
 $server = "localhost";
 $user = "wbip";
 $pw = "wbip123";
 $db = "test";
-
-include('db-connect.php');
-
 
 $connect=mysqli_connect($server, $user, $pw, $db);
 
@@ -31,10 +27,7 @@ if( !$connect)
 	using user name $user (".mysqli_connect_errno().
 	", ".mysqli_connect_error().")");
 }
-
-$jobTitle = $_POST['jobTitle'];
-
-$userQuery = " Select lastName, firstName From personnel where jobTitle = '$jobTitle'";  // ADD THE QUERY
+$userQuery = "Select empID from personnel where hourlyWage < 10.00"; // ADD THE QUERY
 
 $result = mysqli_query($connect, $userQuery);
 
@@ -50,21 +43,17 @@ if (mysqli_num_rows($result) == 0)
 }
 else 
 { 
-  
-	print("<h1>RESULTS</h1>");
-	print("<table border = \"1\">");
-	print("<tr><th>FIRST NAME</th><th>LAST NAME</th></tr>");
-  while ($person = mysqli_fetch_assoc($result))
+	print("<h1>LIST OF EMPLOYEES WHO NEED A RAISE</h1>");
+  while ($raise = mysqli_fetch_assoc($result))
   {
-  print("<tr><th>".$person['firstName']."</th><th>".$person['lastName']."</th></tr>");
-	
-	print ("</table>");
-  }  
+  print("<p>Employee ".$raise['empID']." Needs a raise!</p>");
+	// ADD CODE HERE
+  }
 }
-
 
 mysqli_close($connect);   // close the connection
  
 ?>
+
 </body>
 </html>
